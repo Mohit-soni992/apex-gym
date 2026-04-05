@@ -1,6 +1,8 @@
 import useReveal from '../hooks/useReveal'
 import { motion } from 'framer-motion'
 import useMediaQuery from '../hooks/useMediaQuery'
+import TypewriterText from '../components/TypewriterText'
+import useTilt from '../hooks/useTilt'
 
 const whyUs = [
   { icon: '🏋️', num: '01', title: 'Modern Equipment', desc: 'State-of-the-art machines and free weights — everything under one roof.' },
@@ -25,6 +27,7 @@ const testimonials = [
 
 function Home() {
   useReveal()
+  useTilt('.tilt-card')
   const device = useMediaQuery()
 
   // grid configs
@@ -51,10 +54,12 @@ function Home() {
         padding: device === 'mobile' ? '72px 16px 0' : device === 'tablet' ? '72px 32px 0' : '72px 60px 0'
       }}>
 
-        {/* bg gradient */}
         <div style={{
-          position: 'absolute', inset: 0,
-          background: 'radial-gradient(ellipse 70% 70% at 20% 50%, rgba(245,166,35,0.07) 0%, transparent 60%), radial-gradient(ellipse 50% 50% at 80% 30%, rgba(245,166,35,0.04) 0%, transparent 50%), linear-gradient(180deg, #0a0f1e 0%, #0d1428 100%)'
+            position: 'absolute', inset: 0,
+          backgroundImage: 'url(bakcground.jpg)',  // ← APNI PHOTO
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          filter: 'brightness(0.3)',  // dark overlay
         }} />
 
         {/* grid lines */}
@@ -94,16 +99,18 @@ function Home() {
 
           {/* title */}
           <motion.h1
-            initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
+            initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay:   0.5 }}
             style={{
               fontFamily: 'Bebas Neue',
               fontSize: device === 'mobile' ? '80px' : device === 'tablet' ? '100px' : 'clamp(80px,14vw,180px)',
               lineHeight: '0.85', letterSpacing: '4px', marginBottom: '28px'
             }}>
-            FORGE<br />
-            <span style={{ WebkitTextStroke: '1px rgba(245,166,35,0.4)', color: 'transparent' }}>YOUR</span><br />
-            LEGACY
-          </motion.h1>
+            <TypewriterText text="FORGE" delay={500} /><br />
+            <span style={{ WebkitTextStroke: '1px rgba(245,166,35,0.4)', color: 'transparent' }}>
+              <TypewriterText text="YOUR" delay={900} />
+            </span><br />
+            <TypewriterText text="LEGACY" delay={1200} />
+          </motion.h1>  
 
           {/* subtitle */}
           <motion.p
@@ -199,7 +206,7 @@ function Home() {
           }}>
             {whyUs.map((w, i) => (
               <div key={i}
-                className={`reveal reveal-d${i + 1}`}
+                className={`reveal reveal-d${i + 1} tilt-card`}
                 style={{
                   background: 'var(--card)',
                   padding: device === 'mobile' ? '32px 24px' : '48px 32px',
@@ -235,7 +242,7 @@ function Home() {
           }}>
             {programs.map((p, i) => (
               <div key={i}
-                className={`reveal reveal-d${i + 1}`}
+                className={`reveal reveal-d${i + 1} tilt-card`}
                 style={{
                   gridColumn: getProgCol(i),
                   gridRow: getProgRow(i),
@@ -278,7 +285,7 @@ function Home() {
           }}>
             {testimonials.map((t, i) => (
               <div key={i}
-                className={`reveal reveal-d${i + 1}`}
+                className={`reveal reveal-d${i + 1} tilt-card`}
                 style={{
                   background: 'var(--card)',
                   padding: device === 'mobile' ? '28px 24px' : '44px',
