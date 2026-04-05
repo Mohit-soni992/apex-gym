@@ -15,6 +15,7 @@ function App() {
 
   return (
     <>
+    <div style={{ overflowX: 'hidden', maxWidth: '100vw', position: 'relative' }}></div>
       {/* CURSOR */}
       <div id="cursor" style={{
         width: '12px', height: '12px',

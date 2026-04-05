@@ -19,6 +19,17 @@
   --border2: rgba(255,255,255,0.05);
 }
 
+html {
+  overflow-x: hidden !important;
+  max-width: 100% !important;
+}
+
+body {
+  overflow-x: hidden !important;
+  max-width: 100% !important;
+  position: relative !important;
+}
+
 * { margin: 0; padding: 0; box-sizing: border-box; max-width: 100%; }
 html { scroll-behavior: auto; }
 body {
