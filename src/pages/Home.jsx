@@ -13,10 +13,10 @@ const whyUs = [
 ]
 
 const programs = [
-  { icon: '💪', tag: 'Most Popular', name: 'WEIGHT TRAINING', meta: '3× Weekly • All Levels • 60 Min', bg: 'linear-gradient(135deg,#0d2416,#1a3d28)' },
-  { icon: '🧘', tag: 'Beginner Friendly', name: 'YOGA', meta: 'Daily • Beginner • 30 Min', bg: 'linear-gradient(135deg,#1a1428,#2d1f4a)' },
-  { icon: '🔥', tag: 'High Intensity', name: 'CROSSFIT', meta: '4× Weekly • Advanced • 45 Min', bg: 'linear-gradient(135deg,#2a1205,#4a2008)' },
-  { icon: '❤️', tag: 'Fat Burn', name: 'CARDIO', meta: 'Daily • All Levels • 45 Min', bg: 'linear-gradient(135deg,#1a0820,#320f3d)' },
+  { icon: '💪', tag: 'Most Popular', name: 'WEIGHT TRAINING', meta: '3× Weekly • All Levels • 60 Min', bg: 'linear-gradient(135deg,#0d2416,#1a3d28)', img: '/images/weight-training.jpg' },
+  { icon: '🧘', tag: 'Beginner Friendly', name: 'YOGA', meta: 'Daily • Beginner • 30 Min', bg: 'linear-gradient(135deg,#1a1428,#2d1f4a)', img: '/images/yoga.jpg' },
+  { icon: '🔥', tag: 'High Intensity', name: 'CROSSFIT', meta: '4× Weekly • Advanced • 45 Min', bg: 'linear-gradient(135deg,#2a1205,#4a2008)', img: '/images/crossfit.jpg' },
+  { icon: '❤️', tag: 'Fat Burn', name: 'CARDIO', meta: 'Daily • All Levels • 45 Min', bg: 'linear-gradient(135deg,#1a0820,#320f3d)', img: '/images/cardio.jpg' },
 ]
 
 const testimonials = [
@@ -56,7 +56,7 @@ function Home() {
 
         <div style={{
             position: 'absolute', inset: 0,
-          backgroundImage: 'url(bakcground.jpg)',  // ← APNI PHOTO
+          backgroundImage: 'url(/images/bakcground.jpg)',  // ← APNI PHOTO
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           filter: 'brightness(0.3)',  // dark overlay
@@ -254,10 +254,11 @@ function Home() {
                 onMouseLeave={e => { e.currentTarget.querySelector('.prog-bg').style.transform = 'scale(1)' }}>
                 <div className="prog-bg" style={{
                   position: 'absolute', inset: 0,
-                  display: 'flex', alignItems: 'center', justifyContent: 'center',
-                  fontSize: '80px', background: p.bg,
+                  backgroundImage: `url(${p.img})`,
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
                   transition: 'transform 0.7s cubic-bezier(0.4,0,0.2,1)'
-                }}>{p.icon}</div>
+                }} />
                 <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(10,15,30,0.97) 0%, rgba(10,15,30,0.4) 50%, transparent 100%)' }} />
                 <div style={{ position: 'absolute', bottom: 0, left: 0, right: 0, padding: device === 'mobile' ? '20px' : '32px' }}>
                   <div style={{ display: 'inline-block', background: 'var(--gold)', color: '#000', fontSize: '9px', fontWeight: '700', letterSpacing: '3px', textTransform: 'uppercase', padding: '5px 14px', marginBottom: '10px' }}>{p.tag}</div>
@@ -309,6 +310,190 @@ function Home() {
           </div>
         </div>
       </section>
+
+      {/* ===== GALLERY ===== */}
+      <section className="section" style={{ background: 'var(--navy)' }}>
+        <div className="container">
+          <div className="section-tag reveal">
+            <div className="section-tag-line" />
+            <div className="section-tag-text">Our Facility</div>
+          </div>
+          <h2 className="section-title reveal" style={{ marginBottom: '48px' }}>
+            INSIDE THE GYM
+          </h2>
+
+          <div style={{
+            display: 'grid',
+            gridTemplateColumns: device === 'mobile' ? '1fr 1fr' : device === 'tablet' ? 'repeat(3,1fr)' : 'repeat(12,1fr)',
+            gridTemplateRows: device === 'mobile' ? 'auto' : device === 'tablet' ? 'auto' : '260px 260px',
+            gap: '8px'
+          }}>
+            {[
+              { cls: device === 'mobile' ? 'span 2' : device === 'tablet' ? 'span 1' : 'span 4', row: device === 'desktop' ? 'span 2' : 'span 1', img: '/images/gallery-1.jpg', emoji: '🏋️‍♂️' },
+              { cls: device === 'mobile' ? 'span 1' : device === 'tablet' ? 'span 1' : 'span 5', row: 'span 1', img: '/images/gallery-2.jpg', emoji: '🧘‍♀️' },
+              { cls: device === 'mobile' ? 'span 1' : device === 'tablet' ? 'span 1' : 'span 3', row: 'span 1', img: '/images/gallery-3.jpg', emoji: '🔥' },
+              { cls: device === 'mobile' ? 'span 1' : device === 'tablet' ? 'span 1' : 'span 3', row: 'span 1', img: '/images/gallery-4.jpg', emoji: '🏃‍♀️' },
+              { cls: device === 'mobile' ? 'span 1' : device === 'tablet' ? 'span 1' : 'span 2', row: 'span 1', img: '/images/gallery-5.jpg', emoji: '💪' },
+              { cls: device === 'mobile' ? 'span 2' : device === 'tablet' ? 'span 1' : 'span 3', row: 'span 1', img: '/images/gallery-6.jpg', emoji: '🥊' },
+            ].map((g, i) => (
+              <div key={i}
+                className="reveal"
+                style={{
+                  gridColumn: g.cls,
+                  gridRow: g.row,
+                  height: device === 'mobile' ? '160px' : device === 'tablet' ? '200px' : 'auto',
+                  background: g.img
+                    ? `url(${g.img}) center/cover no-repeat`
+                    : 'var(--card)',
+                  position: 'relative',
+                  overflow: 'hidden',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  fontSize: '64px',
+                  cursor: 'none',
+                  transition: 'all 0.4s'
+                }}
+                onMouseEnter={e => e.currentTarget.style.filter = 'brightness(1.2)'}
+                onMouseLeave={e => e.currentTarget.style.filter = 'brightness(1)'}>
+
+                {/* Agar photo nahi hai toh emoji dikhao */}
+                {!g.img && g.emoji}
+
+                {/* Gold hover overlay */}
+                <div style={{
+                  position: 'absolute', inset: 0,
+                  background: 'rgba(245,166,35,0.08)',
+                  opacity: 0, transition: 'opacity 0.4s',
+                }}
+                  onMouseEnter={e => e.currentTarget.style.opacity = '1'}
+                  onMouseLeave={e => e.currentTarget.style.opacity = '0'}
+                />
+
+                {/* Bottom gradient */}
+                <div style={{
+                  position: 'absolute', bottom: 0, left: 0, right: 0,
+                  height: '40%',
+                  background: 'linear-gradient(to top, rgba(10,15,30,0.6), transparent)'
+                }} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+            {/* ===== ABOUT / TEAM ===== */}
+  <section className="section" style={{ background: 'var(--navy2)', padding: '0' }}>
+    <div style={{
+      display: 'grid',
+      gridTemplateColumns: device === 'mobile' ? '1fr' : '1fr 1fr',
+      minHeight: device === 'mobile' ? 'auto' : '560px',
+    }}>
+        
+          {/* LEFT — Photo */}
+          <div style={{
+            position: 'relative',
+            height: device === 'mobile' ? '300px' : 'auto',
+            overflow: 'hidden',
+          }}>
+            <img
+              src="/images/team.jpg"
+              alt="Apex Gym Team"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                objectPosition: 'center',
+                display: 'block',
+                filter: 'brightness(0.85)',
+                transition: 'transform 0.6s ease',
+              }}
+              onMouseEnter={e => e.currentTarget.style.transform = 'scale(1.03)'}
+              onMouseLeave={e => e.currentTarget.style.transform = 'scale(1)'}
+            />
+            {/* gold overlay */}
+            <div style={{
+              position: 'absolute', inset: 0,
+              background: 'linear-gradient(to right, transparent 60%, var(--navy2) 100%)',
+            }} />
+          </div>
+          
+          {/* RIGHT — Text */}
+          <div style={{
+            padding: device === 'mobile' ? '48px 20px' : '80px 60px',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+          }}>
+            <div className="section-tag reveal" style={{ marginBottom: '20px' }}>
+              <div className="section-tag-line" />
+              <div className="section-tag-text">Our Story</div>
+            </div>
+        
+            <h2 className="section-title reveal" style={{ marginBottom: '24px' }}>
+              MEET THE<br />
+              <span style={{ color: 'var(--gold)' }}>TEAM</span>
+            </h2>
+        
+            <p className="reveal" style={{
+              fontSize: device === 'mobile' ? '14px' : '16px',
+              fontWeight: '300',
+              color: 'var(--light-gray)',
+              lineHeight: '1.8',
+              marginBottom: '32px',
+              fontFamily: 'Cormorant Garamond',
+              fontStyle: 'italic',
+              fontSize: '18px',
+            }}>
+              Founded in 2019, Apex Gym was built on one belief — 
+              that every person deserves a coach who genuinely cares. 
+              Our trainers aren't just experts, they're your partners in transformation.
+            </p>
+          
+            {/* Stats */}
+            <div className="reveal" style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(3, 1fr)',
+              gap: '24px',
+              marginBottom: '40px',
+              paddingTop: '32px',
+              borderTop: '1px solid var(--border)',
+            }}>
+              {[
+                { num: '20+', label: 'Expert Trainers' },
+                { num: '500+', label: 'Happy Members' },
+                { num: '5★', label: 'Avg Rating' },
+              ].map(({ num, label }) => (
+                <div key={label}>
+                  <div style={{
+                    fontFamily: 'Bebas Neue',
+                    fontSize: '40px',
+                    color: 'var(--gold)',
+                    lineHeight: 1,
+                    marginBottom: '6px',
+                  }}>{num}</div>
+                  <div style={{
+                    fontSize: '10px',
+                    fontWeight: '600',
+                    letterSpacing: '2px',
+                    textTransform: 'uppercase',
+                    color: 'var(--gray)',
+                  }}>{label}</div>
+                </div>
+              ))}
+            </div>
+            
+            <div className="reveal">
+              <button className="btn-gold" style={{
+                clipPath: device === 'mobile' ? 'none' : 'polygon(12px 0%,100% 0%,calc(100% - 12px) 100%,0% 100%)'
+              }}>
+                Meet All Trainers
+              </button>
+            </div>
+          </div>
+            
+        </div>
+        </section>
+      
 
     </div>
   )

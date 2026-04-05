@@ -1,16 +1,8 @@
-import { useState } from 'react'
 import gymConfig from '../config/gymConfig'
+import { useForm } from '@formspree/react'
 
 function Contact() {
-  const [form, setForm] = useState({ name: '', email: '', message: '' })
-
-  const handleChange = e => setForm({ ...form, [e.target.name]: e.target.value })
-
-  const handleSubmit = e => {
-    e.preventDefault()
-    alert(`Thanks ${form.name}! We'll get back to you soon.`)
-    setForm({ name: '', email: '', message: '' })
-  }
+  const [state, handleSubmit] = useForm('xgoprwez')
 
   const inputStyle = {
     width: '100%', background: 'var(--card)', border: '1px solid var(--border)',
@@ -48,21 +40,52 @@ function Contact() {
           </div>
 
           <form onSubmit={handleSubmit}>
+          {state.succeeded && (
+            <div style={{
+            marginTop: '16px', padding: '16px',
+            background: 'rgba(245,166,35,0.1)',
+            border: '1px solid rgba(245,166,35,0.3)',
+            color: 'var(--gold)',
+            fontSize: '13px', fontWeight: '600',
+            letterSpacing: '1px', textAlign: 'center',
+            }}>
+            ✓ Message sent! We'll get back to you soon.
+            </div>
+          )}
+
+          {state.errors && state.errors.length > 0 && (
+            <div style={{
+            marginTop: '16px', padding: '16px',
+            background: 'rgba(255,60,60,0.1)',
+            border: '1px solid rgba(255,60,60,0.3)',
+            color: '#ff6b6b',
+            fontSize: '13px', fontWeight: '600',
+            letterSpacing: '1px', textAlign: 'center',
+            }}>
+            ✗ Something went wrong. Please try again.
+            </div>
+          )}
             <label style={{ fontFamily: 'Barlow Condensed', fontSize: '11px', letterSpacing: '3px', textTransform: 'uppercase', color: 'var(--gray)', display: 'block', marginBottom: '8px' }}>Your Name</label>
-            <input name="name" value={form.name} onChange={handleChange} placeholder="Enter your name" style={inputStyle} required />
+            <input name="name" placeholder="Enter your name" style={inputStyle} required />
 
             <label style={{ fontFamily: 'Barlow Condensed', fontSize: '11px', letterSpacing: '3px', textTransform: 'uppercase', color: 'var(--gray)', display: 'block', marginBottom: '8px' }}>Email Address</label>
-            <input name="email" type="email" value={form.email} onChange={handleChange} placeholder="Enter your email" style={inputStyle} required />
+            <input name="email" type="email" placeholder="Enter your email" style={inputStyle} required />
 
             <label style={{ fontFamily: 'Barlow Condensed', fontSize: '11px', letterSpacing: '3px', textTransform: 'uppercase', color: 'var(--gray)', display: 'block', marginBottom: '8px' }}>Message</label>
-            <textarea name="message" value={form.message} onChange={handleChange} placeholder="How can we help?" style={{ ...inputStyle, height: '140px', resize: 'vertical' }} required />
+            <textarea name="message" placeholder="How can we help?" style={{ ...inputStyle, height: '140px', resize: 'vertical' }} required />
 
-            <button type="submit" style={{
-              width: '100%', background: 'var(--primary)', color: '#000', border: 'none',
-              padding: '16px', fontFamily: 'Barlow Condensed', fontSize: '15px',
-              fontWeight: '700', letterSpacing: '3px', textTransform: 'uppercase', cursor: 'pointer',
-              clipPath: 'polygon(12px 0%, 100% 0%, calc(100% - 12px) 100%, 0% 100%)'
-            }}>Send Message →</button>
+            <button
+              type="submit"
+              disabled={state.submitting}
+              className="btn-gold"
+              style={{
+                width: '100%', padding: '18px',
+                clipPath: 'none', border: 'none',
+                opacity: state.submitting ? 0.7 : 1,
+                fontSize: '12px', letterSpacing: '3px',
+              }}>
+              {state.submitting ? 'SENDING...' : 'SEND MESSAGE →'}
+            </button>
           </form>
         </div>
       </section>

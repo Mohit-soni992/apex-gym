@@ -1,10 +1,10 @@
 import useReveal from '../hooks/useReveal'
 
 const trainers = [
-  { name: 'SARAH JOHNSON', role: 'Yoga & Flexibility Coach', icon: '🧘‍♀️', tags: ['Yoga','Stretch','Mindfulness'], exp: '6 Yrs', sessions: '1200+', bg: 'linear-gradient(135deg,#0d2416,#1a3428)' },
-  { name: 'MIKE TORRES', role: 'Strength & Conditioning', icon: '💪', tags: ['Weights','Powerlifting'], exp: '8 Yrs', sessions: '2000+', bg: 'linear-gradient(135deg,#1a0f08,#2d1a0a)' },
-  { name: 'JAKE REEVES', role: 'CrossFit Specialist', icon: '🔥', tags: ['CrossFit','HIIT'], exp: '5 Yrs', sessions: '900+', bg: 'linear-gradient(135deg,#150820,#260e38)' },
-  { name: 'ALEX KIM', role: 'Cardio & Nutrition Coach', icon: '🏃', tags: ['Cardio','Diet','Fat Loss'], exp: '7 Yrs', sessions: '1500+', bg: 'linear-gradient(135deg,#0a1020,#121830)' },
+  { name: 'SARAH JOHNSON', role: 'Yoga & Flexibility Coach', icon: '🧘‍♀️', img: '/images/sarah.jpg', tags: ['Yoga','Stretch','Mindfulness'], exp: '6 Yrs', sessions: '1200+', bg: 'linear-gradient(135deg,#0d2416,#1a3428)' },
+  { name: 'MIKE TORRES', role: 'Strength & Conditioning', icon: '💪', img: '/images/mike.jpg', tags: ['Weights','Powerlifting'], exp: '8 Yrs', sessions: '2000+', bg: 'linear-gradient(135deg,#1a0f08,#2d1a0a)' },
+  { name: 'JAKE REEVES', role: 'CrossFit Specialist', icon: '🔥', img: '/images/jake.jpg', tags: ['CrossFit','HIIT'], exp: '5 Yrs', sessions: '900+', bg: 'linear-gradient(135deg,#150820,#260e38)' },
+  { name: 'ALEX KIM', role: 'Cardio & Nutrition Coach', icon: '🏃', img: '/images/alex.jpg', tags: ['Cardio','Diet','Fat Loss'], exp: '7 Yrs', sessions: '1500+', bg: 'linear-gradient(135deg,#0a1020,#121830)' },
 ]
 
 function Trainers() {
@@ -22,9 +22,20 @@ function Trainers() {
                 style={{ background: 'var(--card)', overflow: 'hidden', border: '1px solid var(--border2)', transition: 'all 0.5s cubic-bezier(0.4,0,0.2,1)' }}
                 onMouseEnter={e => { e.currentTarget.style.transform = 'translateY(-10px)'; e.currentTarget.style.borderColor = 'rgba(245,166,35,0.2)'; }}
                 onMouseLeave={e => { e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderColor = 'var(--border2)'; }}>
-                <div style={{ height: '300px', background: t.bg, display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '90px', position: 'relative', borderBottom: '2px solid var(--gold)' }}>
-                  {t.icon}
-                </div>
+               <div style={{
+                height: '300px',
+                background: t.img ? `url(${t.img}) center top / cover no-repeat` : t.bg,
+                display: 'flex', alignItems: 'center',
+                justifyContent: 'center', fontSize: '90px',
+                position: 'relative', borderBottom: '2px solid var(--gold)'
+              }}>
+                {!t.img && t.icon}
+                <div style={{
+                  position: 'absolute', bottom: 0, left: 0, right: 0,
+                  height: '50%',
+                  background: 'linear-gradient(to top, var(--card), transparent)'
+                }} />
+              </div>
                 <div style={{ padding: '28px' }}>
                   <div style={{ fontFamily: 'Bebas Neue', fontSize: '24px', letterSpacing: '2px', marginBottom: '4px' }}>{t.name}</div>
                   <div style={{ fontSize: '10px', fontWeight: '700', letterSpacing: '3px', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: '20px' }}>{t.role}</div>
