@@ -63,15 +63,14 @@ function Navbar() {
           </ul>
         )}
 
-        {/* Desktop Login */}
         {device === 'desktop' && (
-          <button className="btn-outline-gold" style={{
+          <Link to="/login" className="btn-outline-gold" style={{
             padding: scrolled ? '8px 22px' : '10px 28px',
             fontSize: '11px',
             transition: 'padding 0.4s ease'
           }}>
             Login
-          </button>
+          </Link>
         )}
 
         {/* Mobile/Tablet Hamburger */}
@@ -126,14 +125,14 @@ function Navbar() {
             {link.label}
           </Link>
         ))}
-        <button className="btn-gold" style={{
+        <Link to="/login" className="btn-gold" onClick={() => setMenuOpen(false)} style={{
           width: '100%', marginTop: '20px', padding: '16px',
-          clipPath: 'none',
+          clipPath: 'none', display: 'block', textAlign: 'center',
           opacity: menuOpen ? 1 : 0,
           transition: 'opacity 0.3s ease 0.3s'
         }}>
           Login
-        </button>
+        </Link>
       </div>
     </>
   )

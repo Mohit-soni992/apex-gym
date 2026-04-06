@@ -1,15 +1,31 @@
-import useReveal from '../hooks/useReveal'
+import { Link, useNavigate } from 'react-router-dom'
 import { motion } from 'framer-motion'
+import useReveal from '../hooks/useReveal'
 import useMediaQuery from '../hooks/useMediaQuery'
 import TypewriterText from '../components/TypewriterText'
 import useTilt from '../hooks/useTilt'
 
 const whyUs = [
-  { icon: '🏋️', num: '01', title: 'Modern Equipment', desc: 'State-of-the-art machines and free weights — everything under one roof.' },
-  { icon: '🥗', num: '02', title: 'Diet Plan', desc: 'Personalized nutrition crafted by experts based on your goals.' },
-  { icon: '🕐', num: '03', title: '12/6 Support', desc: 'Full trainer support on every gym day — we never leave you alone.' },
-  { icon: '📊', num: '04', title: 'Progress Tracking', desc: 'Weekly analysis and data-driven suggestions for better growth.' },
-  { icon: '📱', num: '05', title: 'Visual Trainer', desc: 'HD training videos to improve your muscle-mind connection.' },
+  {
+    num: '01', title: 'Modern Equipment', desc: 'State-of-the-art machines and free weights — everything under one roof.',
+    icon: (<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M6 4v16M18 4v16M2 8h4M18 8h4M2 16h4M18 16h4M6 12h12" /></svg>)
+  },
+  {
+    num: '02', title: 'Diet Plan', desc: 'Personalized nutrition crafted by experts based on your goals.',
+    icon: (<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z" /><path d="M12 6v6l4 2" /></svg>)
+  },
+  {
+    num: '03', title: '12/6 Support', desc: 'Full trainer support on every gym day — we never leave you alone.',
+    icon: (<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg>)
+  },
+  {
+    num: '04', title: 'Progress Tracking', desc: 'Weekly analysis and data-driven suggestions for better growth.',
+    icon: (<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="20" x2="18" y2="10" /><line x1="12" y1="20" x2="12" y2="4" /><line x1="6" y1="20" x2="6" y2="14" /><line x1="2" y1="20" x2="22" y2="20" /></svg>)
+  },
+  {
+    num: '05', title: 'Visual Trainer', desc: 'HD training videos to improve your muscle-mind connection.',
+    icon: (<svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><rect x="2" y="7" width="15" height="10" rx="2" /><path d="m22 7-5 5 5 5V7z" /></svg>)
+  },
 ]
 
 const programs = [
@@ -19,16 +35,28 @@ const programs = [
   { icon: '❤️', tag: 'Fat Burn', name: 'CARDIO', meta: 'Daily • All Levels • 45 Min', bg: 'linear-gradient(135deg,#1a0820,#320f3d)', img: '/images/cardio.jpg' },
 ]
 
+const AvatarF = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
+  </svg>
+)
+const AvatarM = () => (
+  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--gold)" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" /><circle cx="12" cy="7" r="4" />
+  </svg>
+)
+
 const testimonials = [
-  { quote: 'Joining Apex was the best decision I made. Lost 18kg in 5 months. The trainers are incredibly supportive!', name: 'Priya Sharma', meta: 'Member · Pro Plan · 2024', avatar: '👩' },
-  { quote: 'The CrossFit program here is elite. Jake pushes you to your limits while keeping it safe. My progress is insane.', name: 'Rohit Verma', meta: 'Member · Elite Plan · 2023', avatar: '👨' },
-  { quote: "Sarah's yoga classes changed my life. Morning sessions are peaceful and energizing. Highly recommend!", name: 'Aisha Patel', meta: 'Member · Basic Plan · 2025', avatar: '👩' },
+  { quote: 'Joining Apex was the best decision I made. Lost 18kg in 5 months. The trainers are incredibly supportive!', name: 'Priya Sharma', meta: 'Member · Pro Plan · 2024', avatar: <AvatarF /> },
+  { quote: 'The CrossFit program here is elite. Jake pushes you to your limits while keeping it safe. My progress is insane.', name: 'Rohit Verma', meta: 'Member · Elite Plan · 2023', avatar: <AvatarM /> },
+  { quote: "Sarah's yoga classes changed my life. Morning sessions are peaceful and energizing. Highly recommend!", name: 'Aisha Patel', meta: 'Member · Basic Plan · 2025', avatar: <AvatarF /> },
 ]
 
 function Home() {
   useReveal()
   useTilt('.tilt-card')
   const device = useMediaQuery()
+  const navigate = useNavigate()
 
   // grid configs
   const progCols = device === 'mobile' ? '1fr' : device === 'tablet' ? '1fr 1fr' : 'repeat(12,1fr)'
@@ -55,8 +83,8 @@ function Home() {
       }}>
 
         <div style={{
-            position: 'absolute', inset: 0,
-          backgroundImage: 'url(/images/bakcground.jpg)',  // ← APNI PHOTO
+          position: 'absolute', inset: 0,
+          backgroundImage: 'url(/images/bakcground.jpg)',  // background particle
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           filter: 'brightness(0.3)',  // dark overlay
@@ -99,7 +127,7 @@ function Home() {
 
           {/* title */}
           <motion.h1
-            initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay:   0.5 }}
+            initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.5 }}
             style={{
               fontFamily: 'Bebas Neue',
               fontSize: device === 'mobile' ? '80px' : device === 'tablet' ? '100px' : 'clamp(80px,14vw,180px)',
@@ -110,7 +138,7 @@ function Home() {
               <TypewriterText text="YOUR" delay={900} />
             </span><br />
             <TypewriterText text="LEGACY" delay={1200} />
-          </motion.h1>  
+          </motion.h1>
 
           {/* subtitle */}
           <motion.p
@@ -135,18 +163,24 @@ function Home() {
               gap: device === 'mobile' ? '16px' : '24px',
               alignItems: device === 'mobile' ? 'flex-start' : 'center'
             }}>
-            <button className="btn-gold" style={{
-              width: device === 'mobile' ? '100%' : 'auto',
-              clipPath: device === 'mobile' ? 'none' : 'polygon(12px 0%,100% 0%,calc(100% - 12px) 100%,0% 100%)'
-            }}>
+            <Link
+              to="/signup"
+              className="btn-gold"
+              style={{
+                width: device === 'mobile' ? '100%' : 'auto',
+                clipPath: device === 'mobile' ? 'none' : 'polygon(12px 0%,100% 0%,calc(100% - 12px) 100%,0% 100%)',
+                textAlign: 'center'
+              }}>
               Begin Your Journey
-            </button>
-            <button style={{
-              background: 'transparent', border: 'none', color: 'var(--off-white)',
-              fontSize: '11px', fontWeight: '600', letterSpacing: '4px',
-              textTransform: 'uppercase', cursor: 'none',
-              display: 'flex', alignItems: 'center', gap: '12px'
-            }}>
+            </Link>
+            <button
+              onClick={() => navigate('/programs')}
+              style={{
+                background: 'transparent', border: 'none', color: 'var(--off-white)',
+                fontSize: '11px', fontWeight: '600', letterSpacing: '4px',
+                textTransform: 'uppercase', cursor: 'none',
+                display: 'flex', alignItems: 'center', gap: '12px'
+              }}>
               Explore Programs
               <span style={{ width: '36px', height: '1px', background: 'currentColor', display: 'inline-block', position: 'relative' }}>
                 <span style={{ position: 'absolute', right: 0, top: '-3px', width: '7px', height: '7px', borderRight: '1px solid currentColor', borderTop: '1px solid currentColor', transform: 'rotate(45deg)', display: 'inline-block' }} />
@@ -217,7 +251,7 @@ function Home() {
                 onMouseEnter={e => { e.currentTarget.style.background = 'var(--card2)'; e.currentTarget.style.transform = 'translateY(-8px)'; e.currentTarget.style.borderBottomColor = 'var(--gold)'; }}
                 onMouseLeave={e => { e.currentTarget.style.background = 'var(--card)'; e.currentTarget.style.transform = 'translateY(0)'; e.currentTarget.style.borderBottomColor = 'transparent'; }}>
                 <div style={{ position: 'absolute', top: '16px', right: '20px', fontFamily: 'Bebas Neue', fontSize: '56px', color: 'rgba(245,166,35,0.06)', lineHeight: 1 }}>{w.num}</div>
-                <div style={{ fontSize: '32px', marginBottom: '20px' }}>{w.icon}</div>
+                <div style={{ marginBottom: '20px', display: 'flex' }}>{w.icon}</div>
                 <div style={{ fontSize: '11px', fontWeight: '700', letterSpacing: '3px', textTransform: 'uppercase', color: 'var(--gold)', marginBottom: '12px' }}>{w.title}</div>
                 <p style={{ fontSize: '13px', color: 'var(--gray)', lineHeight: '1.8', fontWeight: '300' }}>{w.desc}</p>
               </div>
@@ -381,14 +415,14 @@ function Home() {
           </div>
         </div>
       </section>
-            {/* ===== ABOUT / TEAM ===== */}
-  <section className="section" style={{ background: 'var(--navy2)', padding: '0' }}>
-    <div style={{
-      display: 'grid',
-      gridTemplateColumns: device === 'mobile' ? '1fr' : '1fr 1fr',
-      minHeight: device === 'mobile' ? 'auto' : '560px',
-    }}>
-        
+      {/* ===== ABOUT / TEAM ===== */}
+      <section className="section" style={{ background: 'var(--navy2)', padding: '0' }}>
+        <div style={{
+          display: 'grid',
+          gridTemplateColumns: device === 'mobile' ? '1fr' : '1fr 1fr',
+          minHeight: device === 'mobile' ? 'auto' : '560px',
+        }}>
+
           {/* LEFT — Photo */}
           <div style={{
             position: 'relative',
@@ -416,7 +450,7 @@ function Home() {
               background: 'linear-gradient(to right, transparent 60%, var(--navy2) 100%)',
             }} />
           </div>
-          
+
           {/* RIGHT — Text */}
           <div style={{
             padding: device === 'mobile' ? '48px 20px' : '80px 60px',
@@ -428,12 +462,12 @@ function Home() {
               <div className="section-tag-line" />
               <div className="section-tag-text">Our Story</div>
             </div>
-        
+
             <h2 className="section-title reveal" style={{ marginBottom: '24px' }}>
               MEET THE<br />
               <span style={{ color: 'var(--gold)' }}>TEAM</span>
             </h2>
-        
+
             <p className="reveal" style={{
               fontSize: device === 'mobile' ? '14px' : '16px',
               fontWeight: '300',
@@ -444,11 +478,11 @@ function Home() {
               fontStyle: 'italic',
               fontSize: '18px',
             }}>
-              Founded in 2019, Apex Gym was built on one belief — 
-              that every person deserves a coach who genuinely cares. 
+              Founded in 2019, Apex Gym was built on one belief —
+              that every person deserves a coach who genuinely cares.
               Our trainers aren't just experts, they're your partners in transformation.
             </p>
-          
+
             {/* Stats */}
             <div className="reveal" style={{
               display: 'grid',
@@ -481,7 +515,7 @@ function Home() {
                 </div>
               ))}
             </div>
-            
+
             <div className="reveal">
               <button className="btn-gold" style={{
                 clipPath: device === 'mobile' ? 'none' : 'polygon(12px 0%,100% 0%,calc(100% - 12px) 100%,0% 100%)'
@@ -490,10 +524,10 @@ function Home() {
               </button>
             </div>
           </div>
-            
+
         </div>
-        </section>
-      
+      </section>
+
 
     </div>
   )
