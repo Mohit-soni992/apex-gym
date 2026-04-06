@@ -7,6 +7,7 @@ function useCursor() {
     if (!cursor || !ring) return
 
     let mx = 0, my = 0, rx = 0, ry = 0
+    let animId
 
     const move = e => {
       mx = e.clientX; my = e.clientY
@@ -19,11 +20,11 @@ function useCursor() {
       ry += (my - ry) * 0.12
       ring.style.left = rx - 18 + 'px'
       ring.style.top = ry - 18 + 'px'
-      requestAnimationFrame(animRing)
+      animId = requestAnimationFrame(animRing)
     }
 
     document.addEventListener('mousemove', move)
-    animRing()
+    animId = requestAnimationFrame(animRing)
 
     const hoverEls = document.querySelectorAll('button, a, .prog-card, .trainer-card, .why-card, .gal-item')
     hoverEls.forEach(el => {
@@ -31,8 +32,11 @@ function useCursor() {
       el.addEventListener('mouseleave', () => cursor.style.transform = 'scale(1)')
     })
 
-    return () => document.removeEventListener('mousemove', move)
+    return () => {
+      document.removeEventListener('mousemove', move)
+      cancelAnimationFrame(animId)
+    }
   }, [])
 }
 
-export default useCursor
+export default useCursor

@@ -8,16 +8,20 @@ import Trainers from './pages/Trainers'
 import Contact from './pages/Contact'
 import Login from './pages/Login'
 import Signup from './pages/Signup'
+import ForgotPassword from './pages/ForgotPassword'
 import useLenis from './hooks/useLenis'
 import useCursor from './hooks/useCursor'
+import { AuthProvider } from './context/AuthContext'
+import ProtectedRoute from './components/ProtectedRoute'
 
-function App() {
+// Inner component — rendered AFTER AuthProvider confirms auth state,
+// so cursor divs are in the DOM when useCursor runs.
+function AppInner() {
   useLenis()
   useCursor()
 
   return (
     <>
-    <div style={{ overflowX: 'hidden', maxWidth: '100vw', position: 'relative' }}></div>
       {/* CURSOR */}
       <div id="cursor" style={{
         width: '12px', height: '12px',
@@ -40,10 +44,19 @@ function App() {
         <Route path="/contact" element={<Contact />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signup" element={<Signup />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
       </Routes>
       <Footer />
     </>
   )
 }
 
-export default App
+function App() {
+  return (
+    <AuthProvider>
+      <AppInner />
+    </AuthProvider>
+  )
+}
+
+export default App

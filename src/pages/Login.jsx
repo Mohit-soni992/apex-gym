@@ -1,15 +1,20 @@
 import { useState, useEffect, useRef } from 'react'
-import { Link, useNavigate } from 'react-router-dom'
+import { Link, useNavigate, useLocation } from 'react-router-dom'
+import { signInWithPopup, signInWithEmailAndPassword } from 'firebase/auth'
+import { auth, googleProvider } from '../config/firebase'
 
 function Login() {
   const [form, setForm] = useState({ email: '', password: '' })
   const [showPass, setShowPass] = useState(false)
   const [focused, setFocused] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [googleLoading, setGoogleLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
   const navigate = useNavigate()
+  const location = useLocation()
   const canvasRef = useRef(null)
+  const from = location.state?.from?.pathname || '/'
 
   /* ---------- animated particle canvas ---------- */
   useEffect(() => {
@@ -76,10 +81,39 @@ function Login() {
     e.preventDefault()
     if (!form.email || !form.password) { setError('Please fill in all fields.'); return }
     setLoading(true)
-    await new Promise(r => setTimeout(r, 1600))
-    setLoading(false)
-    setSuccess(true)
-    setTimeout(() => navigate('/'), 1200)
+    setError('')
+    try {
+      await signInWithEmailAndPassword(auth, form.email, form.password)
+      setSuccess(true)
+      setTimeout(() => navigate(from, { replace: true }), 1000)
+    } catch (err) {
+      const msg = {
+        'auth/user-not-found': 'No account found with this email.',
+        'auth/wrong-password': 'Incorrect password. Try again.',
+        'auth/invalid-email': 'Please enter a valid email address.',
+        'auth/too-many-requests': 'Too many attempts. Please try again later.',
+        'auth/invalid-credential': 'Invalid email or password.',
+      }[err.code] || 'Login failed. Please try again.'
+      setError(msg)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleGoogleLogin = async () => {
+    setGoogleLoading(true)
+    setError('')
+    try {
+      await signInWithPopup(auth, googleProvider)
+      setSuccess(true)
+      setTimeout(() => navigate(from, { replace: true }), 1000)
+    } catch (err) {
+      if (err.code !== 'auth/popup-closed-by-user') {
+        setError(err.message || 'Google sign-in failed. Please try again.')
+      }
+    } finally {
+      setGoogleLoading(false)
+    }
   }
 
   return (
@@ -208,9 +242,12 @@ function Login() {
 
             {/* forgot */}
             <div style={{ textAlign: 'right', marginBottom: '18px' }}>
-              <a href="#" style={{ fontSize: '10px', color: 'var(--gold)', letterSpacing: '1px', fontWeight: 600 }}>
+              <Link
+                to="/forgot-password"
+                style={{ fontSize: '10px', color: 'var(--gold)', letterSpacing: '1px', fontWeight: 600 }}
+              >
                 Forgot Password?
-              </a>
+              </Link>
             </div>
 
             <button id="login-submit" type="submit" className="login-btn login-btn--sm" disabled={loading || success}>
@@ -228,9 +265,19 @@ function Login() {
           </div>
 
           {/* social */}
-          <button className="login-social-btn login-social-btn--sm" aria-label="Login with Google">
-            <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#EA4335" d="M5.266 9.765A7.077 7.077 0 0 1 12 4.909c1.69 0 3.218.6 4.418 1.582L19.91 3C17.782 1.145 15.055 0 12 0 7.27 0 3.198 2.698 1.24 6.65l4.026 3.115z"/><path fill="#34A853" d="M16.04 18.013c-1.09.703-2.474 1.078-4.04 1.078a7.077 7.077 0 0 1-6.723-4.777L1.24 17.35C3.198 21.302 7.27 24 12 24c2.933 0 5.735-1.043 7.834-3l-3.793-2.987z"/><path fill="#4A90D9" d="M19.834 21c2.195-2.048 3.62-5.096 3.62-9 0-.71-.109-1.473-.272-2.182H12v4.637h6.436c-.317 1.559-1.17 2.766-2.395 3.558L19.834 21z"/><path fill="#FBBC05" d="M5.277 14.268A7.12 7.12 0 0 1 4.909 12c0-.782.125-1.533.357-2.235L1.24 6.65A11.934 11.934 0 0 0 0 12c0 1.92.445 3.73 1.237 5.335l4.04-3.067z"/></svg>
-            Continue with Google
+          <button
+            id="login-google-btn"
+            className="login-social-btn login-social-btn--sm"
+            aria-label="Login with Google"
+            onClick={handleGoogleLogin}
+            disabled={googleLoading || loading || success}
+            type="button"
+          >
+            {googleLoading
+              ? <span className="login-spinner" style={{ borderTopColor: '#4285F4' }} />
+              : <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#EA4335" d="M5.266 9.765A7.077 7.077 0 0 1 12 4.909c1.69 0 3.218.6 4.418 1.582L19.91 3C17.782 1.145 15.055 0 12 0 7.27 0 3.198 2.698 1.24 6.65l4.026 3.115z"/><path fill="#34A853" d="M16.04 18.013c-1.09.703-2.474 1.078-4.04 1.078a7.077 7.077 0 0 1-6.723-4.777L1.24 17.35C3.198 21.302 7.27 24 12 24c2.933 0 5.735-1.043 7.834-3l-3.793-2.987z"/><path fill="#4A90D9" d="M19.834 21c2.195-2.048 3.62-5.096 3.62-9 0-.71-.109-1.473-.272-2.182H12v4.637h6.436c-.317 1.559-1.17 2.766-2.395 3.558L19.834 21z"/><path fill="#FBBC05" d="M5.277 14.268A7.12 7.12 0 0 1 4.909 12c0-.782.125-1.533.357-2.235L1.24 6.65A11.934 11.934 0 0 0 0 12c0 1.92.445 3.73 1.237 5.335l4.04-3.067z"/></svg>
+            }
+            {googleLoading ? 'Signing in…' : 'Continue with Google'}
           </button>
 
           <p style={{ textAlign: 'center', marginTop: '14px', fontSize: '11px', color: 'var(--light-gray)' }}>

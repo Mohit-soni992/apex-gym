@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
+import { signInWithPopup, createUserWithEmailAndPassword, updateProfile } from 'firebase/auth'
+import { auth, googleProvider } from '../config/firebase'
 
 const PLANS = ['Basic', 'Pro', 'Elite']
 
@@ -8,6 +10,7 @@ function Signup() {
   const [showPass, setShowPass] = useState(false)
   const [focused, setFocused] = useState(null)
   const [loading, setLoading] = useState(false)
+  const [googleLoading, setGoogleLoading] = useState(false)
   const [error, setError] = useState('')
   const [success, setSuccess] = useState(false)
   const navigate = useNavigate()
@@ -67,10 +70,39 @@ function Signup() {
     if (form.password !== form.confirm) { setError('Passwords do not match.'); return }
     if (form.password.length < 6) { setError('Password must be at least 6 characters.'); return }
     setLoading(true)
-    await new Promise(r => setTimeout(r, 1600))
-    setLoading(false)
-    setSuccess(true)
-    setTimeout(() => navigate('/login'), 1400)
+    setError('')
+    try {
+      const { user } = await createUserWithEmailAndPassword(auth, form.email, form.password)
+      // Save display name to Firebase profile
+      await updateProfile(user, { displayName: form.name })
+      setSuccess(true)
+      setTimeout(() => navigate('/'), 1200)
+    } catch (err) {
+      const msg = {
+        'auth/email-already-in-use': 'An account with this email already exists. Try logging in.',
+        'auth/invalid-email': 'Please enter a valid email address.',
+        'auth/weak-password': 'Password is too weak. Use at least 6 characters.',
+      }[err.code] || 'Sign up failed. Please try again.'
+      setError(msg)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  const handleGoogleSignup = async () => {
+    setGoogleLoading(true)
+    setError('')
+    try {
+      await signInWithPopup(auth, googleProvider)
+      setSuccess(true)
+      setTimeout(() => navigate('/'), 1000)
+    } catch (err) {
+      if (err.code !== 'auth/popup-closed-by-user') {
+        setError(err.message || 'Google sign-up failed. Please try again.')
+      }
+    } finally {
+      setGoogleLoading(false)
+    }
   }
 
   return (
@@ -230,6 +262,29 @@ function Signup() {
                 : 'Create Account'}
             </button>
           </form>
+
+          {/* divider */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', margin: '16px 0' }}>
+            <div style={{ flex: 1, height: '1px', background: 'var(--border)' }} />
+            <span style={{ fontSize: '9px', color: 'var(--gray)', letterSpacing: '2px' }}>OR</span>
+            <div style={{ flex: 1, height: '1px', background: 'var(--border)' }} />
+          </div>
+
+          {/* Google sign-up */}
+          <button
+            id="signup-google-btn"
+            className="login-social-btn login-social-btn--sm"
+            aria-label="Sign up with Google"
+            onClick={handleGoogleSignup}
+            disabled={googleLoading || loading || success}
+            type="button"
+          >
+            {googleLoading
+              ? <span className="login-spinner" style={{ borderTopColor: '#4285F4' }} />
+              : <svg width="16" height="16" viewBox="0 0 24 24"><path fill="#EA4335" d="M5.266 9.765A7.077 7.077 0 0 1 12 4.909c1.69 0 3.218.6 4.418 1.582L19.91 3C17.782 1.145 15.055 0 12 0 7.27 0 3.198 2.698 1.24 6.65l4.026 3.115z"/><path fill="#34A853" d="M16.04 18.013c-1.09.703-2.474 1.078-4.04 1.078a7.077 7.077 0 0 1-6.723-4.777L1.24 17.35C3.198 21.302 7.27 24 12 24c2.933 0 5.735-1.043 7.834-3l-3.793-2.987z"/><path fill="#4A90D9" d="M19.834 21c2.195-2.048 3.62-5.096 3.62-9 0-.71-.109-1.473-.272-2.182H12v4.637h6.436c-.317 1.559-1.17 2.766-2.395 3.558L19.834 21z"/><path fill="#FBBC05" d="M5.277 14.268A7.12 7.12 0 0 1 4.909 12c0-.782.125-1.533.357-2.235L1.24 6.65A11.934 11.934 0 0 0 0 12c0 1.92.445 3.73 1.237 5.335l4.04-3.067z"/></svg>
+            }
+            {googleLoading ? 'Signing up…' : 'Sign up with Google'}
+          </button>
 
           <p style={{ textAlign: 'center', marginTop: '14px', fontSize: '11px', color: 'var(--light-gray)' }}>
             Already a member?{' '}
