@@ -1,3 +1,4 @@
+import { useLocation } from 'react-router-dom'
 import gymConfig from '../config/gymConfig'
 import { useForm } from '@formspree/react'
 import useMediaQuery from '../hooks/useMediaQuery'
@@ -7,6 +8,10 @@ function Contact() {
   useReveal()
   const device = useMediaQuery()
   const [state, handleSubmit] = useForm('xgoprwez')
+
+  // Pre-fill from Programs page
+  const location = useLocation()
+  const prefilledProgram = location.state?.program || ''
 
   const inputStyle = {
     width: '100%',
@@ -111,13 +116,13 @@ function Contact() {
                 height={device === 'mobile' ? '180' : '220'}
                 style={{
                   border: 'none',
-                  filter: 'invert(90%) hue-rotate(180deg)',  // dark theme match karega
-                    display: 'block',
-                  }}
-                  allowFullScreen=""
-                  loading="lazy"
-                  referrerPolicy="no-referrer-when-downgrade"
-                />
+                  filter: 'invert(90%) hue-rotate(180deg)',
+                  display: 'block',
+                }}
+                allowFullScreen=""
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+              />
             </div>
 
             {/* RIGHT — Form */}
@@ -166,9 +171,26 @@ function Contact() {
                   onBlur={e => e.target.style.borderColor = 'var(--border2)'}
                 />
 
+                {/* Interested In — prefilled from Programs page */}
+                <label style={labelStyle}>Interested In</label>
+                <input
+                  name="program"
+                  placeholder="e.g. Weight Training"
+                  defaultValue={prefilledProgram}
+                  style={{
+                    ...inputStyle,
+                    borderColor: prefilledProgram ? 'var(--gold)' : 'var(--border2)',
+                    color: prefilledProgram ? 'var(--gold)' : 'var(--white)',
+                  }}
+                  onFocus={e => e.target.style.borderColor = 'var(--gold)'}
+                  onBlur={e => e.target.style.borderColor = prefilledProgram ? 'var(--gold)' : 'var(--border2)'}
+                />
+
                 <label style={labelStyle}>Message</label>
                 <textarea
-                  name="message" placeholder="How can we help?"
+                  name="message"
+                  placeholder="How can we help?"
+                  defaultValue={prefilledProgram ? `Hi, I'm interested in joining the ${prefilledProgram} program. Please share more details.` : ''}
                   style={{ ...inputStyle, height: '140px', resize: 'vertical' }}
                   required
                   onFocus={e => e.target.style.borderColor = 'var(--gold)'}

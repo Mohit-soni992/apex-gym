@@ -49,7 +49,7 @@ function Footer() {
             fontSize: '9px', fontWeight: '700', letterSpacing: '3px',
             textTransform: 'uppercase', marginBottom: '20px', color: 'var(--off-white)'
           }}>Quick Links</div>
-          {[['/', 'Home'], ['/programs', 'Programs'], ['/schedule', 'Schedule'], ['/contact', 'Contact']].map(([path, label]) => (
+          {[['/', 'Home'], ['/programs', 'Programs'], ['/trainers', 'Trainers'], ['/contact', 'Contact']].map(([path, label]) => (
             <div key={path} style={{ marginBottom: '12px' }}>
               <Link to={path} style={{ fontSize: '13px', color: 'var(--gray)', fontWeight: '300' }}>
                 {label}
